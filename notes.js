@@ -4,24 +4,16 @@ const chalk = require('chalk')
 // CHALK OPTIONS
 
 const success = chalk.green.inverse
-const error = chalk.red.inverse
-const info = chalk.bgYellow.black
-
-
-const listNotes = () => {
-    const notes = loadNotes()
-    console.log(info('This is the list of To Do Stuff.....'))
-    notes.forEach(note => console.log(note.title));
-}
+const error = chalk.red
+const info = chalk.yellow
 
 // ADDING A NOTE TO NOTES ARRAY
 
 const addNote = (title, body) => {
     const notes = loadNotes()
+    const duplicateNote = notes.find((note) => note.title === title)
 
-    const duplicateNotes = notes.filter((note) => note.title === title)
-
-    if(duplicateNotes.length === 0) {
+    if (!duplicateNote) {
         notes.push({
             title: title,
             body: body
@@ -32,6 +24,27 @@ const addNote = (title, body) => {
     }
 
     saveNotes(notes)
+}
+
+// LIST ALL NOTES ARRAY
+const listNotes = () => {
+    const notes = loadNotes()
+    console.log(info('This is the list of To Do Stuff.....'))
+    notes.forEach(note => console.log(note.title));
+}
+
+// READ A NOTE TO NOTES ARRAY
+
+const readNote = (title) => {
+    const notes = loadNotes()
+    const note = notes.find((note) => note.title === title)
+
+    if (note) {
+        console.log(info(note.title));
+        console.log(note.body)
+    } else {
+        console.log(error('Note not found!'))
+    }
 }
 
 // REMOVING A NOTE TO NOTES ARRAY
@@ -45,8 +58,8 @@ const removeNote = (title) => {
         console.log(error("No note found!"))
     } else {
         saveNotes(notesToKeep)
-        console.log(success('Note removed!'))  
-    } 
+        console.log(success('Note removed!'))
+    }
 }
 
 const saveNotes = (notes) => {
@@ -68,6 +81,6 @@ module.exports = {
     // getNotes: getNotes,
     addNote: addNote,
     removeNote: removeNote,
-    listNotes: listNotes
-
+    listNotes: listNotes,
+    readNote: readNote
 }
